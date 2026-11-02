@@ -4,7 +4,7 @@ Materials for students (this repository contains **only** these workshop files).
 
 | File | Description |
 |------|-------------|
-| [IAHR_Final_Slides.pptx](./IAHR_Final_Slides.pptx) | Final workshop slides |
+| [IAHR_Slides.pdf](./IAHR_Slides.pdf) | Workshop slides |
 | [Dataset.xlsx](./Dataset.xlsx) | Workshop dataset |
 | [Example_1.inp](./Example_1.inp) | EPANET network used in the slides (junctions 2–7; excite node 4; sensor node 6) |
 
