@@ -1,10 +1,11 @@
 ﻿# IAHR Transient Committee Workshop
 
-Workshop materials for students.
+Materials for students (this repository contains **only** these workshop files).
 
 | File | Description |
 |------|-------------|
-| [Slides.pdf](./Slides.pdf) | Presentation slides |
+| [IAHR_Final_Slides.pptx](./IAHR_Final_Slides.pptx) | Final workshop slides |
 | [Dataset.xlsx](./Dataset.xlsx) | Workshop dataset |
+| [Example_1.inp](./Example_1.inp) | EPANET network used in the slides (junctions 2–7; excite node 4; sensor node 6) |
 
-**Folder link:** https://github.com/alihaghighi59-code/IAHR_Transient_Committee_Workshop
+**Share link:** https://github.com/alihaghighi59-code/IAHR_Transient_Committee_Workshop
