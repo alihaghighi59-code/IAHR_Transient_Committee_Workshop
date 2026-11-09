@@ -1,97 +1,160 @@
-# Homework Assignment — Artificial Neural Networks (ANNs) for Leak Detection & Sizing
+# ANN Homework Assignment  
+## Transient Committee Online Course — ECTS option
 
-**Course:** Online training course (IASHR / IAHR Transient Committee)  
-**Session:** ANN for transient-based leak detection in water distribution networks  
 **Instructor:** Ali Haghighi  
-**Purpose:** Optional homework for participants who wish to earn ECTS credits  
+**Length:** short practical exercise + **1–2 page** report  
+**Time guide:** about 2–4 hours  
 
 ---
 
-## Important note on scope
+## What you will do
 
-The full research workflow (hydraulic transient simulation, FFT-based feature engineering, and related pre-analysis) is **outside** the scope of this short assignment.  
-You will **not** be asked to rebuild that pipeline.
-
-Instead, you will use a **ready structured dataset** and focus on designing, training, and improving ANNs.
+You will **not** run hydraulic models or FFT feature engineering.  
+You will use a **ready labelled dataset**, train your own ANN, try a few settings, and compare your results with the slides.
 
 ---
 
-## Materials (download first)
+## Step 0 — Download the materials
 
-https://github.com/alihaghighi59-code/IAHR_Transient_Committee_Workshop
+Open this folder and download the files:
 
-| File | Use |
-|------|-----|
-| `IAHR_Slides.pdf` | Session slides (methods + reference results) |
-| `Dataset.xlsx` | Labelled structured dataset for training |
-| `Example_1.inp` | Network file used to generate the case (context only) |
-| `Workshop_QR.png` | Optional QR link to the same folder |
+**https://github.com/alihaghighi59-code/IAHR_Transient_Committee_Workshop**
 
----
+You need at least:
 
-## Learning goals
+1. `IAHR_Slides.pdf` — reference results and concepts  
+2. `Dataset.xlsx` — structured training data  
 
-1. Train ANNs for:
-   - **Leak presence** — binary classification (yes/no), and  
-   - **Leak size** — regression.  
-2. Explore how architecture and training choices affect performance.  
-3. Recognise **overfitting** and try simple remedies.  
-4. Compare your results with the reference results in the slides.
+(Optional: `Example_1.inp` is only for context; you do not need to simulate it.)
 
 ---
 
-## Tasks
+## Step 1 — Understand the dataset (15–20 min)
 
-### 1. Build and train your own ANN (required)
+Open `Dataset.xlsx` and identify:
 
-1. Download `Dataset.xlsx` and the slides.  
-2. Implement a multi-layer perceptron (MLP) in **PyTorch** or **TensorFlow/Keras** (LLM / vibe-coding assistants are allowed).  
-3. Train **both** tasks on the shared dataset:
-   - classification for leak presence,  
-   - regression for leak size.  
-4. Use a train / validation (or test) split and report held-out metrics.
+- **Input features** (columns used as model inputs `X`)  
+- **Leak presence** labels (binary: leak yes/no, or equivalent 0/1 columns)  
+- **Leak size** labels (continuous size values for regression)
 
-**Suggested metrics**
+Write down in your report:
 
-- Presence: accuracy, precision/recall or F1  
-- Size: MAE, RMSE, and/or MAPE / R²  
-
-### 2. Controlled experiments (required)
-
-Keeping the dataset fixed, run a small study by changing **at least three** of the following:
-
-- activation function (e.g. ReLU, tanh, sigmoid),  
-- number of neurons per hidden layer,  
-- number of hidden layers,  
-- learning rate,  
-- dropout percentage.
-
-Do this for **both** presence and sizing (they may use different settings).
-
-### 3. Short write-up (1–2 pages)
-
-Submit a brief report including:
-
-1. Model setup (framework, architecture, loss, optimiser).  
-2. A compact table of experiments and metrics (baseline vs variants).  
-3. Comparison with the results shown in the instructor’s slides.  
-4. Discussion (½–1 page): where you saw overfitting, what reduced it, and what improved generalisation (or why something did not help).  
-5. One figure (optional but recommended): learning curves or a metrics comparison chart.
+- number of rows (samples)  
+- number of input features  
+- which columns are inputs, which are presence labels, which are size labels  
 
 ---
 
-## Submission
+## Step 2 — Build an ANN (30–60 min)
 
-- Format: PDF or Word, **max 2 pages** (+ one optional figure page).  
-- File name: `ANN_Homework_LastName_FirstName.pdf`  
-- Submit as instructed by the IASHR Secretariat / course organisers.
+Use **PyTorch** or **TensorFlow/Keras**.  
+You may use ChatGPT / Copilot / other LLM tools to help write the code.
 
-## Notes
+Build a multilayer perceptron (MLP) and prepare **two training problems** on the same feature matrix `X`:
 
-- Focus on insight, not a huge hyperparameter search.  
-- State your framework (PyTorch / TensorFlow) and random seed if used.  
-- The dataset is educational / synthetic in spirit; treat results as a learning exercise.
+| Task | Type | Target | Example metrics |
+|------|------|--------|-----------------|
+| **A. Leak presence** | Binary classification | yes/no (0/1) | accuracy, F1 |
+| **B. Leak size** | Regression | size (e.g. mm) | MAE, RMSE, R² or MAPE |
+
+**Requirements**
+
+- Split data into **train** and **validation/test** (e.g. 75% / 25%).  
+- Fix a random seed and state it in the report.  
+- For classification, use an appropriate loss (e.g. binary cross-entropy / BCE).  
+- For regression, use an appropriate loss (e.g. MSE or MAE).
 
 ---
 
-*Questions on the ANN session content: Ali Haghighi.*
+## Step 3 — Run a baseline model (required)
+
+Train once with a simple baseline, for example:
+
+- 2 hidden layers  
+- ReLU activation  
+- moderate width (e.g. 32–64 neurons)  
+- a standard learning rate (e.g. 1e-3)  
+- small or zero dropout  
+
+Record for **both** Task A and Task B:
+
+- architecture (e.g. `n_features → 64 → 32 → outputs`)  
+- activation, learning rate, dropout  
+- train vs validation/test metrics  
+- whether the model looks overfitted (train much better than validation)
+
+---
+
+## Step 4 — Experiments (required)
+
+Keep the **dataset and split fixed**. Change settings and retrain.
+
+You must test **at least three** of these knobs (ideally all five):
+
+1. Activation function (ReLU / tanh / sigmoid)  
+2. Number of neurons  
+3. Number of hidden layers  
+4. Learning rate  
+5. Dropout percentage  
+
+Do experiments for **both**:
+
+- leak presence (classification), and  
+- leak size (regression).
+
+Make a small table like:
+
+| Run | Task | Activation | Layers / neurons | LR | Dropout | Val metric | Overfit? (Y/N) |
+|-----|------|------------|------------------|----|---------|------------|----------------|
+| 1 | Presence | ReLU | 64-32 | 1e-3 | 0.0 | … | … |
+| 2 | Presence | … | … | … | … | … | … |
+| … | Size | … | … | … | … | … | … |
+
+---
+
+## Step 5 — Compare with the slides (required)
+
+Open `IAHR_Slides.pdf` and compare:
+
+- your best presence metrics vs the presence results shown in the slides  
+- your best size metrics vs the sizing results shown in the slides  
+
+In 5–10 sentences, answer:
+
+- Did you get close, better, or worse?  
+- What setting helped most?  
+- What caused overfitting in your runs?  
+- What reduced overfitting (dropout, smaller network, lower learning rate, earlier stopping, more regularisation, etc.)?
+
+---
+
+## Step 6 — Submit
+
+Submit **one PDF or Word file**, maximum **2 pages** (one extra page allowed for a table/figure).
+
+**File name:** `ANN_Homework_LastName_FirstName.pdf`
+
+**Your report must include**
+
+1. Dataset summary (rows, features, label columns used)  
+2. Framework used (PyTorch or TensorFlow)  
+3. Baseline setup + metrics (presence and size)  
+4. Experiment table (Step 4)  
+5. Comparison with the slides + short discussion on overfitting and improvements  
+
+**You do not need to submit code**, unless the organisers ask for it.
+
+---
+
+## Checklist before you submit
+
+- [ ] Used the shared `Dataset.xlsx` (not a new hydraulic/FFT pipeline)  
+- [ ] Trained both presence (classification) and size (regression)  
+- [ ] Ran at least three hyperparameter variations  
+- [ ] Compared results with the slides  
+- [ ] Discussed overfitting and one improvement strategy  
+- [ ] Report is ≤ 2 pages  
+
+---
+
+Good luck — keep the models simple, vary one idea at a time, and focus on what the metrics teach you.
